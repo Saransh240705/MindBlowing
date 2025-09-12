@@ -5,7 +5,9 @@ import { API } from '../config/api';
 const GoogleSignIn = ({ onSuccess, onError }) => {
   const handleGoogleSignIn = async (credentialResponse) => {
     try {
-      const response = await fetch(`${API.BASE_URL}/auth/google`, {
+      console.log('🔑 Attempting Google sign-in with:', API.BASE_URL);
+      
+      const response = await fetch(`${API.BASE_URL}/api/auth/google`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -35,13 +37,14 @@ const GoogleSignIn = ({ onSuccess, onError }) => {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full max-w-sm mx-auto">
       <GoogleLogin
         onSuccess={handleGoogleSignIn}
         onError={() => onError('Google sign-in failed')}
         theme="filled_black"
         size="large"
-        width="100%"
+        shape="rectangular"
+        width={320}
       />
     </div>
   );
