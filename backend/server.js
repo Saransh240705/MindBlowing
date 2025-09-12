@@ -38,10 +38,11 @@ if (!process.env.JWT_SECRET) {
 
 // Connect to MongoDB with better error handling
 mongoose.connect(mongoURI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
   serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
   socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
+  ssl: true,
+  retryWrites: true,
+  w: 'majority'
 }).catch(err => {
   console.error('Failed to connect to MongoDB on startup:', err.message);
   console.log('Server will continue running, but database operations will fail');
