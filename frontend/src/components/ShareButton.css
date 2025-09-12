@@ -1,0 +1,238 @@
+.share-button-container {
+  position: relative;
+  display: inline-block;
+}
+
+.share-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: 1px solid #e1e1e1;
+  border-radius: 6px;
+  background: white;
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.share-button:hover {
+  background: #f8f9fa;
+  border-color: #007bff;
+  color: #007bff;
+}
+
+.share-icon {
+  font-size: 16px;
+}
+
+.share-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 280px;
+  background: white;
+  border: 1px solid #e1e1e1;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.share-dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #e1e1e1;
+  background: #f8f9fa;
+}
+
+.share-dropdown-header h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #666;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.close-button:hover {
+  background: #e9ecef;
+  color: #333;
+}
+
+.share-options {
+  padding: 8px;
+}
+
+.share-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  background: none;
+  color: #333;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.share-option:hover {
+  background: #f8f9fa;
+}
+
+.share-option-icon {
+  font-size: 18px;
+  width: 20px;
+  text-align: center;
+}
+
+.copy-link-section {
+  padding: 16px;
+  border-top: 1px solid #e1e1e1;
+  background: #f8f9fa;
+}
+
+.copy-link-input {
+  display: flex;
+  gap: 8px;
+}
+
+.url-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #e1e1e1;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #666;
+  background: white;
+}
+
+.copy-button {
+  padding: 8px 12px;
+  border: 1px solid #007bff;
+  border-radius: 4px;
+  background: #007bff;
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.copy-button:hover {
+  background: #0056b3;
+  border-color: #0056b3;
+}
+
+.copy-button.success {
+  background: #28a745;
+  border-color: #28a745;
+}
+
+.copy-button.success:hover {
+  background: #218838;
+  border-color: #218838;
+}
+
+/* Dark theme */
+.theme-dark .share-button {
+  background: #2d2d2d;
+  border-color: #444;
+  color: #ccc;
+}
+
+.theme-dark .share-button:hover {
+  background: #3c3c3c;
+  border-color: #64b5f6;
+  color: #64b5f6;
+}
+
+.theme-dark .share-dropdown {
+  background: #2d2d2d;
+  border-color: #444;
+}
+
+.theme-dark .share-dropdown-header {
+  background: #1e1e1e;
+  border-bottom-color: #444;
+}
+
+.theme-dark .share-dropdown-header h4 {
+  color: #fff;
+}
+
+.theme-dark .close-button {
+  color: #ccc;
+}
+
+.theme-dark .close-button:hover {
+  background: #3c3c3c;
+  color: #fff;
+}
+
+.theme-dark .share-option {
+  color: #ccc;
+}
+
+.theme-dark .share-option:hover {
+  background: #3c3c3c;
+}
+
+.theme-dark .copy-link-section {
+  background: #1e1e1e;
+  border-top-color: #444;
+}
+
+.theme-dark .url-input {
+  background: #2d2d2d;
+  border-color: #444;
+  color: #ccc;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .share-dropdown {
+    right: 0;
+    left: 0;
+    min-width: auto;
+  }
+  
+  .share-options {
+    padding: 4px;
+  }
+  
+  .share-option {
+    padding: 16px;
+    font-size: 16px;
+  }
+  
+  .copy-link-input {
+    flex-direction: column;
+  }
+  
+  .copy-button {
+    padding: 12px;
+    font-size: 14px;
+  }
+}

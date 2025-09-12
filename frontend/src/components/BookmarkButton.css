@@ -1,0 +1,73 @@
+.bookmark-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: 1px solid #e1e1e1;
+  border-radius: 6px;
+  background: white;
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.bookmark-button:hover {
+  background: #f8f9fa;
+  border-color: #ffc107;
+  color: #ffc107;
+}
+
+.bookmark-button.bookmarked {
+  background: #ffc107;
+  border-color: #ffc107;
+  color: white;
+}
+
+.bookmark-button.bookmarked:hover {
+  background: #e0a800;
+  border-color: #e0a800;
+}
+
+.bookmark-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.bookmark-button.loading {
+  opacity: 0.7;
+}
+
+.bookmark-icon {
+  font-size: 16px;
+  transition: transform 0.2s ease;
+}
+
+.bookmark-button:hover .bookmark-icon {
+  transform: scale(1.1);
+}
+
+/* Dark theme */
+.theme-dark .bookmark-button {
+  background: #2d2d2d;
+  border-color: #444;
+  color: #ccc;
+}
+
+.theme-dark .bookmark-button:hover {
+  background: #3c3c3c;
+  border-color: #ffc107;
+  color: #ffc107;
+}
+
+.theme-dark .bookmark-button.bookmarked {
+  background: #ffc107;
+  border-color: #ffc107;
+  color: #1e1e1e;
+}
+
+.theme-dark .bookmark-button.bookmarked:hover {
+  background: #e0a800;
+  border-color: #e0a800;
+}
