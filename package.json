@@ -1,22 +1,27 @@
 {
   "name": "mindbloging",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "backend/server.js",
   "scripts": {
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "server": "cd backend && npm run dev",
     "client": "cd frontend && npm start",
-    "build": "cd backend && npm install",
+    "build": "echo 'Installing backend dependencies...' && cd backend && npm install && echo 'Backend dependencies installed successfully'",
     "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install --legacy-peer-deps",
-    "start": "cd backend && npm start",
+    "start": "echo 'Starting backend server...' && cd backend && node server.js",
     "deploy": "npm run install-all && npm run build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "echo 'Installing backend deps in postinstall...' && cd backend && npm install || echo 'Backend install failed'"
   },
   "keywords": ["blog", "mern", "react", "nodejs", "mongodb"],
   "author": "",
   "license": "ISC",
   "description": "MindBloging - A full-stack blog platform built with MERN stack",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "devDependencies": {
     "concurrently": "^7.6.0"
-  }
+  },
+  "dependencies": {}
 }
