@@ -1,0 +1,22 @@
+{
+  "name": "mindbloging-backend",
+  "version": "1.0.0",
+  "description": "MindBloging Backend API",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "cd backend && npm run dev",
+    "build": "cd backend && npm install",
+    "postinstall": "cd backend && npm install"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Saransh240705/MindBlowing.git"
+  },
+  "author": "Saransh",
+  "license": "MIT"
+}
