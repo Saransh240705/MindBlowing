@@ -36,46 +36,15 @@ if (!process.env.JWT_SECRET) {
   process.exit(1);
 }
 
-// Connect to MongoDB with SSL error handling
-const connectWithRetry = async () => {
-  try {
-    console.log('Attempting to connect to MongoDB...');
-    await mongoose.connect(mongoURI, {
-      serverSelectionTimeoutMS: 10000,
-      socketTimeoutMS: 0,
-      maxPoolSize: 10,
-      bufferMaxEntries: 0,
-      // Try without SSL first for compatibility
-      tls: false,
-      ssl: false
-    });
+// Connect to MongoDB - simple and reliable approach
+mongoose.connect(mongoURI)
+  .then(() => {
     console.log('✅ Connected to MongoDB successfully');
-  } catch (error) {
-    console.log('❌ Failed to connect without SSL, trying with SSL...');
-    try {
-      await mongoose.connect(mongoURI, {
-        serverSelectionTimeoutMS: 10000,
-        socketTimeoutMS: 0,
-        maxPoolSize: 10,
-        bufferMaxEntries: 0,
-        // Try with SSL
-        tls: true,
-        tlsAllowInvalidCertificates: true,
-        tlsAllowInvalidHostnames: true
-      });
-      console.log('✅ Connected to MongoDB with SSL');
-    } catch (sslError) {
-      console.error('❌ MongoDB connection failed with both SSL and non-SSL:', sslError.message);
-      console.log('🔄 Server will continue running, but database operations will fail');
-    }
-  }
-};
-
-// Initial connection
-connectWithRetry().catch(err => {
-  console.error('Failed to connect to MongoDB on startup:', err.message);
-  console.log('Server will continue running, but database operations will fail');
-});
+  })
+  .catch((err) => {
+    console.error('❌ MongoDB connection failed:', err.message);
+    console.log('🔄 Server will continue running, but database operations will fail');
+  });
 
 mongoose.connection.on('connected', () => {
   console.log('Connected to MongoDB');
