@@ -18,12 +18,23 @@ Render is not correctly installing backend dependencies because of the monorepo 
 ### Step 3: Configure Service Settings
 **IMPORTANT**: Use these EXACT settings:
 
+**Option A (Recommended - Use rootDir):**
 ```
 Name: mindbloging-backend
 Runtime: Node
-Root Directory: (leave BLANK - do not set to "backend")
-Build Command: cd backend && npm install
-Start Command: cd backend && node server.js
+Root Directory: backend
+Build Command: npm install
+Start Command: node server.js
+Auto-Deploy: Yes
+```
+
+**Option B (Alternative - Use from root):**
+```
+Name: mindbloging-backend
+Runtime: Node
+Root Directory: (leave BLANK)
+Build Command: npm run build
+Start Command: npm start
 Auto-Deploy: Yes
 ```
 
