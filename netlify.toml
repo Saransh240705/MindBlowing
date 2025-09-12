@@ -1,0 +1,25 @@
+[build]
+  # Directory with the package.json and build command
+  base = "frontend/"
+  
+  # Build command 
+  command = "npm run build"
+  
+  # Directory with the built files
+  publish = "build/"
+
+# Environment variables (set these in Netlify dashboard)
+[build.environment]
+  NODE_VERSION = "18"
+
+# Redirect rules for React Router
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Headers for better performance  
+[[headers]]
+  for = "/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
