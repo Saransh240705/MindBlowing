@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import PostCard from '../components/PostCard.jsx';
+import { buildApiUrl, API_ENDPOINTS } from '../config/api';
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -22,7 +23,7 @@ const Home = () => {
       if (filters.tags) params.append('tags', filters.tags);
       if (filters.search) params.append('search', filters.search);
       
-      const response = await axios.get(`http://localhost:5001/api/posts?${params}`);
+      const response = await axios.get(buildApiUrl(`${API_ENDPOINTS.POSTS}?${params}`));
       setPosts(response.data.posts || []);
     } catch (error) {
       console.error('Error fetching posts:', error);
@@ -40,8 +41,8 @@ const Home = () => {
   const fetchMetadata = async () => {
     try {
       const [categoriesRes, tagsRes] = await Promise.all([
-        axios.get('http://localhost:5001/api/posts/meta/categories'),
-        axios.get('http://localhost:5001/api/posts/meta/tags'),
+        axios.get(buildApiUrl(API_ENDPOINTS.CATEGORIES)),
+        axios.get(buildApiUrl(API_ENDPOINTS.TAGS)),
       ]);
       
       setCategories(categoriesRes.data || []);

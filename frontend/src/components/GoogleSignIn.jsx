@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { buildApiUrl, API_ENDPOINTS } from '../config/api';
 
 const GoogleSignIn = ({ onSuccess, onError }) => {
   const buttonRef = useRef(null);
@@ -6,7 +7,7 @@ const GoogleSignIn = ({ onSuccess, onError }) => {
   useEffect(() => {
     const handleCredentialResponse = async (response) => {
       try {
-        const result = await fetch('http://localhost:5001/api/auth/google', {
+        const result = await fetch(buildApiUrl(API_ENDPOINTS.GOOGLE_AUTH), {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

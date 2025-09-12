@@ -11,7 +11,11 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 const corsOptions = {
-  origin: process.env.CLIENT_URL || 'http://localhost:3000',
+  origin: [
+    'http://localhost:3000',
+    'https://mind-blowing-m45n-9qmv0ole6-saransh240705s-projects.vercel.app',
+    process.env.CLIENT_URL
+  ].filter(Boolean), // Remove any undefined values
   credentials: true,
   optionsSuccessStatus: 200
 };
@@ -32,14 +36,27 @@ if (!process.env.JWT_SECRET) {
   process.exit(1);
 }
 
-mongoose.connect(mongoURI);
+// Connect to MongoDB with better error handling
+mongoose.connect(mongoURI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+  socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
+}).catch(err => {
+  console.error('Failed to connect to MongoDB on startup:', err.message);
+  console.log('Server will continue running, but database operations will fail');
+});
 
 mongoose.connection.on('connected', () => {
   console.log('Connected to MongoDB');
 });
 
 mongoose.connection.on('error', (err) => {
-  console.error('MongoDB connection error:', err);
+  console.error('MongoDB connection error:', err.message);
+});
+
+mongoose.connection.on('disconnected', () => {
+  console.log('MongoDB disconnected');
 });
 
 // Routes
@@ -62,7 +79,7 @@ app.use((err, req, res, next) => {
 });
 
 // Handle 404 routes
-app.use('*', (req, res) => {
+app.use((req, res) => {
   res.status(404).json({ message: 'API route not found' });
 });
 

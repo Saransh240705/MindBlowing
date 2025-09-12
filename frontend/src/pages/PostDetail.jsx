@@ -4,6 +4,7 @@ import axios from 'axios';
 import ReadingProgress from '../components/ReadingProgress.jsx';
 import ShareButton from '../components/ShareButton.jsx';
 import BookmarkButton from '../components/BookmarkButton.jsx';
+import { buildApiUrl, API_ENDPOINTS } from '../config/api';
 
 const PostDetail = () => {
   const { id } = useParams();
@@ -17,7 +18,7 @@ const PostDetail = () => {
 
   const fetchPost = useCallback(async () => {
     try {
-      const response = await axios.get(`http://localhost:5001/api/posts/${id}`);
+      const response = await axios.get(buildApiUrl(API_ENDPOINTS.POST_BY_ID(id)));
       setPost(response.data);
     } catch (error) {
       setError('Post not found');
@@ -28,7 +29,7 @@ const PostDetail = () => {
 
   const fetchComments = useCallback(async () => {
     try {
-      const response = await axios.get(`http://localhost:5001/api/comments/post/${id}`);
+      const response = await axios.get(buildApiUrl(API_ENDPOINTS.COMMENTS_BY_POST(id)));
       setComments(response.data);
     } catch (error) {
       console.error('Error fetching comments:', error);
@@ -46,7 +47,7 @@ const PostDetail = () => {
 
     setCommentLoading(true);
     try {
-      await axios.post('http://localhost:5001/api/comments', {
+      await axios.post(buildApiUrl(API_ENDPOINTS.COMMENTS), {
         content: newComment,
         postId: id,
       });

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import PostCard from '../components/PostCard.jsx';
+import { buildApiUrl, API_ENDPOINTS } from '../config/api';
 
 const ManagePosts = () => {
   const [posts, setPosts] = useState([]);
@@ -16,7 +17,7 @@ const ManagePosts = () => {
   const fetchMyPosts = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:5001/api/posts/my/posts');
+      const response = await axios.get(buildApiUrl(API_ENDPOINTS.MY_POSTS));
       setPosts(response.data);
     } catch (error) {
       setError('Failed to fetch posts');
@@ -32,7 +33,7 @@ const ManagePosts = () => {
   const handleDelete = async (postId) => {
     if (window.confirm('Are you sure you want to delete this post?')) {
       try {
-        await axios.delete(`http://localhost:5001/api/posts/${postId}`);
+        await axios.delete(buildApiUrl(API_ENDPOINTS.POST_BY_ID(postId)));
         setPosts(posts.filter(post => post._id !== postId));
       } catch (error) {
         setError('Failed to delete post');

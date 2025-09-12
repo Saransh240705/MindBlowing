@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: mindbloging-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node server.js
+    plan: free
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        value: mongodb+srv://vsaransh6_db_user:LDwWgYlEZPYagkqP@cluster0.enjhtiu.mongodb.net/mindbloging
+      - key: JWT_SECRET
+        value: your_super_secure_jwt_secret_key_2025_mindbloging_app
+      - key: CLIENT_URL
+        value: https://mind-blowing-m45n-9qmv0ole6-saransh240705s-projects.vercel.app
+      - key: GOOGLE_CLIENT_ID
+        value: 1025218204151-jdq0armnoj6765cp0779b17mjsonfusc.apps.googleusercontent.com
+      - key: GOOGLE_CLIENT_SECRET
+        value: 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

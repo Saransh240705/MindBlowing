@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useReducer } from 'react';
 import axios from 'axios';
+import { API_ENDPOINTS, buildApiUrl } from '../config/api';
 
 const AuthContext = createContext();
 
@@ -78,7 +79,7 @@ export const AuthProvider = ({ children }) => {
           // Set the token in axios headers
           axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
           
-          const response = await axios.get('http://localhost:5001/api/auth/me');
+          const response = await axios.get(buildApiUrl(API_ENDPOINTS.ME));
           
           dispatch({ 
             type: 'LOGIN_SUCCESS', 
@@ -103,7 +104,7 @@ export const AuthProvider = ({ children }) => {
   // Login function
   const login = async (email, password) => {
     try {
-      const response = await axios.post('http://localhost:5001/api/auth/login', {
+      const response = await axios.post(buildApiUrl(API_ENDPOINTS.LOGIN), {
         email,
         password,
       });
@@ -132,7 +133,7 @@ export const AuthProvider = ({ children }) => {
   // Register function
   const register = async (firstName, lastName, email, password) => {
     try {
-      const response = await axios.post('http://localhost:5001/api/auth/register', {
+      const response = await axios.post(buildApiUrl(API_ENDPOINTS.REGISTER), {
         firstName,
         lastName,
         email,
@@ -163,7 +164,7 @@ export const AuthProvider = ({ children }) => {
   const googleLogin = async (googleToken) => {
     try {
       console.log('Attempting Google login with token');
-      const response = await axios.post('http://localhost:5001/api/auth/google', {
+      const response = await axios.post(buildApiUrl(API_ENDPOINTS.GOOGLE_AUTH), {
         token: googleToken,
       });
       
