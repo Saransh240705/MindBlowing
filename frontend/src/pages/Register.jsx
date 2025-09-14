@@ -36,31 +36,41 @@ const Register = () => {
     setLoading(true);
 
     try {
-      const result = await register(
-        formData.firstName,
-        formData.lastName,
-        formData.email,
-        formData.password
-      );
+      // Create a username from email (required by backend)
+      const username = formData.email.split('@')[0];
       
-      if (result.success) {
+      const userData = {
+        username,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        password: formData.password
+      };
+      
+      const result = await register(userData);
+      
+      if (result && result.token) {
         navigate('/');
       } else {
-        setError(result.message);
+        setError('Registration failed. Please try again.');
       }
     } catch (error) {
-      setError('An unexpected error occurred');
+      setError(error.message || 'Registration failed. Please try again with different credentials.');
     } finally {
       setLoading(false);
     }
   };
 
   const handleGoogleSuccess = async (data) => {
-    const result = await handleGoogleLogin(data);
-    if (result.success) {
-      navigate('/');
-    } else {
-      setError('Failed to complete Google authentication');
+    try {
+      const result = await handleGoogleLogin(data);
+      if (result && result.token) {
+        navigate('/');
+      } else {
+        setError('Failed to complete Google authentication');
+      }
+    } catch (error) {
+      setError(error.message || 'Failed to complete Google authentication');
     }
   };
 

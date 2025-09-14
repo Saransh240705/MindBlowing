@@ -135,6 +135,60 @@ export const AuthProvider = ({ children }) => {
         throw new Error(data.message || `Registration failed with status ${response.status}`);
       }
 
+      // Ensure we have token and user data
+      if (!data.token || !data.user) {
+        throw new Error('Invalid response from server');
+      }
+
+      // Store authentication data
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+
+      dispatch({
+        type: 'LOGIN_SUCCESS',
+        payload: {
+          token: data.token,
+          user: data.user
+        },
+      });
+
+      // Add a success flag for compatibility with the Register component
+      return { ...data, success: true };
+    } catch (error) {
+      console.error('❌ Registration error:', error);
+      dispatch({
+        type: 'LOGIN_FAILURE',
+        payload: error.message,
+      });
+      return { success: false, message: error.message };
+    }
+  };
+
+  const handleGoogleLogin = async (credentialResponse) => {
+    dispatch({ type: 'LOGIN_START' });
+    
+    try {
+      const apiUrl = `${API.BASE_URL}${API.ENDPOINTS.GOOGLE_AUTH}`;
+      console.log('🔑 Attempting Google login to:', apiUrl);
+      
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({ credential: credentialResponse.credential }),
+      });
+
+      console.log('📡 Google login response status:', response.status);
+
+      const data = await response.json();
+      console.log('📡 Google login response data:', data);
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Google login failed');
+      }
+
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
 
@@ -145,7 +199,7 @@ export const AuthProvider = ({ children }) => {
 
       return data;
     } catch (error) {
-      console.error('❌ Registration error:', error);
+      console.error('❌ Google login error:', error);
       dispatch({
         type: 'LOGIN_FAILURE',
         payload: error.message,
@@ -153,7 +207,7 @@ export const AuthProvider = ({ children }) => {
       throw error;
     }
   };
-
+  
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
@@ -167,6 +221,7 @@ export const AuthProvider = ({ children }) => {
         login,
         register,
         logout,
+        handleGoogleLogin,
       }}
     >
       {children}

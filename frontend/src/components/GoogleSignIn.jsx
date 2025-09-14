@@ -1,38 +1,14 @@
 import React from 'react';
 import { GoogleLogin } from '@react-oauth/google';
-import { API } from '../config/api';
 
 const GoogleSignIn = ({ onSuccess, onError }) => {
-  const handleGoogleSignIn = async (credentialResponse) => {
+  const handleGoogleSignIn = (credentialResponse) => {
     try {
-      console.log('🔑 Attempting Google sign-in with:', API.BASE_URL);
-      
-      const response = await fetch(`${API.BASE_URL}/api/auth/google`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          credential: credentialResponse.credential,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      
-      if (data.token) {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
-        onSuccess(data);
-      } else {
-        throw new Error('No token received');
-      }
+      // Pass the credential to the parent component
+      onSuccess(credentialResponse);
     } catch (error) {
       console.error('Google sign-in error:', error);
-      onError(error.message);
+      onError(error.message || 'Google sign-in failed');
     }
   };
 

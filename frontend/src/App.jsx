@@ -6,6 +6,7 @@ import Navbar from './components/Navbar.jsx';
 import Home from './pages/Home.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
+import RegisterTest from './pages/RegisterTest.jsx';
 import CreatePost from './pages/CreatePost.jsx';
 import PostDetail from './pages/PostDetail.jsx';
 import ManagePosts from './pages/ManagePosts.jsx';
@@ -47,6 +48,10 @@ function App() {
                   <Register />
                 </AuthRoute>
               } 
+            />
+            <Route 
+              path="/register-test" 
+              element={<RegisterTest />}
             />
             <Route 
               path="*" 
