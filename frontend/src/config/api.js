@@ -1,6 +1,8 @@
-// API configuration
+// Force production API URL
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://mindblowing.onrender.com';
+
 const API = {
-  BASE_URL: process.env.REACT_APP_API_URL || 'https://mindblowing.onrender.com',
+  BASE_URL: API_BASE_URL,
   ENDPOINTS: {
     LOGIN: '/api/auth/login',
     REGISTER: '/api/auth/register',
@@ -11,9 +13,25 @@ const API = {
   }
 };
 
+// Legacy exports for backward compatibility
+const API_ENDPOINTS = {
+  POSTS: '/api/posts',
+  MY_POSTS: '/api/posts/my-posts',
+  COMMENTS: '/api/comments',
+  LOGIN: '/api/auth/login',
+  REGISTER: '/api/auth/register',
+  GOOGLE_AUTH: '/api/auth/google',
+};
+
+const buildApiUrl = (endpoint) => {
+  return `${API_BASE_URL}${endpoint}`;
+};
+
+// Debug logging
 console.log('🚀 API Configuration:', {
   BASE_URL: API.BASE_URL,
-  ENV_VAR: process.env.REACT_APP_API_URL
+  ENV_VAR: process.env.REACT_APP_API_URL,
+  NODE_ENV: process.env.NODE_ENV
 });
 
-export { API };
+export { API, API_ENDPOINTS, buildApiUrl };

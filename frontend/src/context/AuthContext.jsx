@@ -69,17 +69,22 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: 'LOGIN_START' });
     
     try {
-      console.log('🔑 Attempting login to:', `${API.BASE_URL}/api/auth/login`);
+      const apiUrl = `${API.BASE_URL}/api/auth/login`;
+      console.log('🔑 Attempting login to:', apiUrl);
       
-      const response = await fetch(`${API.BASE_URL}/api/auth/login`, {
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
         },
         body: JSON.stringify({ email, password }),
       });
 
+      console.log('📡 Login response status:', response.status);
+
       const data = await response.json();
+      console.log('📡 Login response data:', data);
 
       if (!response.ok) {
         throw new Error(data.message || 'Login failed');
@@ -95,7 +100,7 @@ export const AuthProvider = ({ children }) => {
 
       return data;
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('❌ Login error:', error);
       dispatch({
         type: 'LOGIN_FAILURE',
         payload: error.message,
@@ -108,20 +113,26 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: 'LOGIN_START' });
     
     try {
-      console.log('📝 Attempting registration to:', `${API.BASE_URL}/api/auth/register`);
+      const apiUrl = `${API.BASE_URL}/api/auth/register`;
+      console.log('📝 Attempting registration to:', apiUrl);
+      console.log('📝 Registration data:', userData);
       
-      const response = await fetch(`${API.BASE_URL}/api/auth/register`, {
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
         },
         body: JSON.stringify(userData),
       });
 
+      console.log('📡 Registration response status:', response.status);
+      
       const data = await response.json();
+      console.log('📡 Registration response data:', data);
 
       if (!response.ok) {
-        throw new Error(data.message || 'Registration failed');
+        throw new Error(data.message || `Registration failed with status ${response.status}`);
       }
 
       localStorage.setItem('token', data.token);
@@ -134,7 +145,7 @@ export const AuthProvider = ({ children }) => {
 
       return data;
     } catch (error) {
-      console.error('Registration error:', error);
+      console.error('❌ Registration error:', error);
       dispatch({
         type: 'LOGIN_FAILURE',
         payload: error.message,
@@ -170,3 +181,7 @@ export const useAuth = () => {
   }
   return context;
 };
+
+// Export AuthContext for backward compatibility
+export { AuthContext };
+export default AuthContext;
