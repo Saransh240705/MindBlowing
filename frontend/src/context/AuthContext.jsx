@@ -69,25 +69,29 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: 'LOGIN_START' });
     
     try {
+      if (!email || !password) {
+        throw new Error('Email and password are required');
+      }
+      
       const apiUrl = `${API.BASE_URL}/api/auth/login`;
-      console.log('🔑 Attempting login to:', apiUrl);
       
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password })
       });
 
-      console.log('📡 Login response status:', response.status);
-
       const data = await response.json();
-      console.log('📡 Login response data:', data);
 
       if (!response.ok) {
-        throw new Error(data.message || 'Login failed');
+        throw new Error(data.message || 'Invalid credentials');
+      }
+
+      // Ensure we have token and user data
+      if (!data.token || !data.user) {
+        throw new Error('Invalid response from server');
       }
 
       localStorage.setItem('token', data.token);
@@ -95,12 +99,15 @@ export const AuthProvider = ({ children }) => {
 
       dispatch({
         type: 'LOGIN_SUCCESS',
-        payload: data,
+        payload: {
+          token: data.token,
+          user: data.user
+        },
       });
 
       return data;
     } catch (error) {
-      console.error('❌ Login error:', error);
+      console.error('Login error:', error);
       dispatch({
         type: 'LOGIN_FAILURE',
         payload: error.message,
@@ -113,23 +120,22 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: 'LOGIN_START' });
     
     try {
+      // Make sure all required fields are present
+      if (!userData.username || !userData.email || !userData.password) {
+        throw new Error('Username, email and password are required');
+      }
+      
       const apiUrl = `${API.BASE_URL}/api/auth/register`;
-      console.log('📝 Attempting registration to:', apiUrl);
-      console.log('📝 Registration data:', userData);
       
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(userData),
+        body: JSON.stringify(userData)
       });
-
-      console.log('📡 Registration response status:', response.status);
       
       const data = await response.json();
-      console.log('📡 Registration response data:', data);
 
       if (!response.ok) {
         throw new Error(data.message || `Registration failed with status ${response.status}`);
@@ -152,15 +158,14 @@ export const AuthProvider = ({ children }) => {
         },
       });
 
-      // Add a success flag for compatibility with the Register component
-      return { ...data, success: true };
+      return data;
     } catch (error) {
-      console.error('❌ Registration error:', error);
+      console.error('Registration error:', error);
       dispatch({
         type: 'LOGIN_FAILURE',
         payload: error.message,
       });
-      return { success: false, message: error.message };
+      throw error;
     }
   };
 
@@ -169,7 +174,6 @@ export const AuthProvider = ({ children }) => {
     
     try {
       const apiUrl = `${API.BASE_URL}${API.ENDPOINTS.GOOGLE_AUTH}`;
-      console.log('🔑 Attempting Google login to:', apiUrl);
       
       const response = await fetch(apiUrl, {
         method: 'POST',
@@ -180,10 +184,7 @@ export const AuthProvider = ({ children }) => {
         body: JSON.stringify({ credential: credentialResponse.credential }),
       });
 
-      console.log('📡 Google login response status:', response.status);
-
       const data = await response.json();
-      console.log('📡 Google login response data:', data);
 
       if (!response.ok) {
         throw new Error(data.message || 'Google login failed');
@@ -199,7 +200,7 @@ export const AuthProvider = ({ children }) => {
 
       return data;
     } catch (error) {
-      console.error('❌ Google login error:', error);
+      console.error('Google login error:', error);
       dispatch({
         type: 'LOGIN_FAILURE',
         payload: error.message,

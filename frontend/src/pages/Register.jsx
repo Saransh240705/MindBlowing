@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
-import GoogleSignIn from '../components/GoogleSignIn.jsx';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -14,8 +13,9 @@ const Register = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   
-  const { register, handleGoogleLogin } = useAuth();
+  const { register } = useAuth();
   const navigate = useNavigate();
+
 
   const handleChange = (e) => {
     setFormData({
@@ -36,8 +36,8 @@ const Register = () => {
     setLoading(true);
 
     try {
-      // Create a username from email (required by backend)
-      const username = formData.email.split('@')[0];
+      // Generate a username from email if not provided
+      const username = formData.email.split('@')[0] + Math.floor(Math.random() * 1000); // Add random number to avoid duplicates
       
       const userData = {
         username,
@@ -61,22 +61,6 @@ const Register = () => {
     }
   };
 
-  const handleGoogleSuccess = async (data) => {
-    try {
-      const result = await handleGoogleLogin(data);
-      if (result && result.token) {
-        navigate('/');
-      } else {
-        setError('Failed to complete Google authentication');
-      }
-    } catch (error) {
-      setError(error.message || 'Failed to complete Google authentication');
-    }
-  };
-
-  const handleGoogleError = (errorMessage) => {
-    setError(errorMessage);
-  };
 
   return (
     <div className="min-h-screen flex overflow-hidden">
@@ -343,26 +327,6 @@ const Register = () => {
             </button>
           </form>
           
-          {/* Divider */}
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-400 font-medium">
-                OR SIGN UP WITH
-              </span>
-            </div>
-          </div>
-          
-          {/* Social Login */}
-          <div>
-            <GoogleSignIn 
-              onSuccess={handleGoogleSuccess}
-              onError={handleGoogleError}
-            />
-          </div>
-          
           {/* Already have account */}
           <div className="text-center text-sm">
             <p className="text-gray-600 dark:text-gray-400">
@@ -372,6 +336,7 @@ const Register = () => {
               </Link>
             </p>
           </div>
+          
         </div>
       </div>
     </div>

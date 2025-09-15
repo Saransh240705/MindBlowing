@@ -14,7 +14,7 @@ const Login = () => {
   
   const { login, handleGoogleLogin } = useAuth();
   const navigate = useNavigate();
-
+  
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -28,15 +28,10 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const result = await login(formData.email, formData.password, rememberMe);
-      if (result.success) {
-        navigate('/');
-      } else {
-        setError(result.message || 'Failed to login');
-      }
+      await login(formData.email, formData.password);
+      navigate('/');
     } catch (err) {
-      console.error('Login error:', err);
-      setError(err.response?.data?.message || err.message || 'Failed to login');
+      setError(err.message || 'Invalid email or password');
     } finally {
       setLoading(false);
     }
@@ -46,14 +41,12 @@ const Login = () => {
     try {
       setLoading(true);
       const result = await handleGoogleLogin(credentialResponse);
-      if (result.success) {
+      if (result && result.token) {
         navigate('/');
       } else {
-        console.error('Google login failed:', result.message);
-        setError(result.message || 'Failed to login with Google');
+        setError('Failed to login with Google');
       }
     } catch (err) {
-      console.error('Google login error:', err);
       setError('Failed to login with Google');
     } finally {
       setLoading(false);
@@ -100,55 +93,47 @@ const Login = () => {
             
             {/* Illustration */}
             <div className="flex justify-center mb-12">
-              <svg className="w-full max-w-sm h-auto opacity-80" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M156.878 94.4892C157.313 94.0543 157.716 93.6008 158.12 93.1473C170.568 79.0061 183.016 64.8649 195.464 50.7236C196.753 49.261 198.214 48.1152 199.847 47.4626C204.034 45.7805 208.279 47.5 210.221 51.4499C211.279 53.6305 211.54 55.9849 211.57 58.3392C211.656 64.2505 211.599 70.1618 211.599 76.0731C211.599 77.0094 211.599 77.9458 211.599 79.0341C212.087 79.0341 212.462 79.0341 212.866 79.0341C227.833 79.0341 242.828 79.0341 257.795 79.0628C262.303 79.0628 265.261 81.9779 265.492 86.4475C265.636 89.2487 264.983 91.7457 262.911 93.6008C262.216 94.2247 261.465 94.7926 260.684 95.3605C241.192 109.155 221.73 122.979 202.238 136.774C194.001 142.483 185.733 148.192 177.496 153.871C175.337 155.353 172.958 156.29 170.28 156.29C167.601 156.29 165.222 155.353 163.063 153.871C144.574 141.661 126.055 129.45 107.566 117.239C101.553 113.316 95.5407 109.424 89.5281 105.501C89.0084 105.164 88.5175 104.798 88.0265 104.461" 
-                  stroke="url(#paint0_linear)" strokeWidth="3" strokeLinecap="round"/>
-                <path d="M338.887 122.863C327.069 122.863 315.25 122.863 303.431 122.863C299.767 122.863 296.979 120.133 296.979 116.527C296.979 112.922 299.767 110.191 303.431 110.191C326.952 110.191 350.473 110.191 373.993 110.191C377.657 110.191 380.445 112.922 380.445 116.527C380.445 120.133 377.657 122.863 373.993 122.863C362.291 122.863 350.589 122.863 338.887 122.863Z" fill="url(#paint1_linear)" />
-                <path d="M338.797 165.666C327.095 165.666 315.365 165.666 303.663 165.666C299.999 165.666 297.212 162.935 297.212 159.358C297.212 155.752 299.999 153.021 303.663 153.021C327.184 153.021 350.705 153.021 374.225 153.021C377.889 153.021 380.677 155.752 380.677 159.358C380.677 162.935 377.889 165.666 374.225 165.666C362.407 165.666 350.588 165.666 338.797 165.666Z" fill="url(#paint2_linear)" />
-                <path d="M339.144 208.498C350.472 208.498 361.801 208.498 373.13 208.498C376.91 208.498 379.814 211.258 379.757 214.934C379.698 218.54 376.794 221.242 373.014 221.242C349.493 221.242 325.973 221.242 302.452 221.242C298.672 221.242 295.768 218.54 295.768 214.934C295.768 211.258 298.643 208.498 302.452 208.498C314.665 208.498 326.877 208.498 339.144 208.498Z" fill="url(#paint3_linear)" />
-                <path d="M339.174 79.9966C350.386 79.9966 361.598 79.9966 372.81 79.9966C376.648 79.9966 379.611 82.7273 379.553 86.3037C379.495 89.9095 376.474 92.5542 372.636 92.5542C349.232 92.5542 325.856 92.5542 302.452 92.5542C298.614 92.5542 295.622 89.9095 295.564 86.3037C295.506 82.6979 298.469 79.9966 302.307 79.9966C314.596 79.9966 326.877 79.9966 339.174 79.9966Z" fill="url(#paint4_linear)" />
-                <defs>
-                  <linearGradient id="paint0_linear" x1="76.7584" y1="121.765" x2="265.538" y2="121.765" gradientUnits="userSpaceOnUse">
-                    <stop stopColor="#6366F1" />
-                    <stop offset="0.5" stopColor="#9333EA" />
-                    <stop offset="1" stopColor="#6366F1" />
-                  </linearGradient>
-                  <linearGradient id="paint1_linear" x1="296.979" y1="116.527" x2="380.445" y2="116.527" gradientUnits="userSpaceOnUse">
-                    <stop stopColor="#6366F1" />
-                    <stop offset="0.5" stopColor="#9333EA" />
-                    <stop offset="1" stopColor="#6366F1" />
-                  </linearGradient>
-                  <linearGradient id="paint2_linear" x1="297.212" y1="159.344" x2="380.677" y2="159.344" gradientUnits="userSpaceOnUse">
-                    <stop stopColor="#6366F1" />
-                    <stop offset="0.5" stopColor="#9333EA" />
-                    <stop offset="1" stopColor="#6366F1" />
-                  </linearGradient>
-                  <linearGradient id="paint3_linear" x1="295.768" y1="214.87" x2="379.757" y2="214.87" gradientUnits="userSpaceOnUse">
-                    <stop stopColor="#6366F1" />
-                    <stop offset="0.5" stopColor="#9333EA" />
-                    <stop offset="1" stopColor="#6366F1" />
-                  </linearGradient>
-                  <linearGradient id="paint4_linear" x1="295.564" y1="86.2754" x2="379.553" y2="86.2754" gradientUnits="userSpaceOnUse">
-                    <stop stopColor="#6366F1" />
-                    <stop offset="0.5" stopColor="#9333EA" />
-                    <stop offset="1" stopColor="#6366F1" />
-                  </linearGradient>
-                </defs>
+              <div className="relative">
+                <div className="relative flex items-center space-x-3">
+                  <svg className="w-16 h-16 text-purple-300/80" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20.71,4.63L19.37,3.29C19.19,3.11 18.94,3 18.67,3H18.66C18.39,3 18.14,3.11 17.96,3.29L9,12.25L11.75,15L20.71,6.04C21.1,5.65 21.1,4.92 20.71,4.63Z"></path>
+                    <path d="M7,14A3,3 0 0,0 4,17C4,18.31 2.84,19.42 1.58,19.91L2,22L4.9,21.34C6.33,21.89 8.28,22.12 10,21.09C12.35,19.74 12.77,16.53 10.71,14.47C9.66,13.42 8.05,13.42 7,14Z"></path>
+                  </svg>
+                  <svg className="w-12 h-12 text-indigo-300/90 transform translate-y-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M4,2H20A2,2 0 0,1 22,4V22L17,17H4A2,2 0 0,1 2,15V4A2,2 0 0,1 4,2M6,9H18V11H6M6,13H16V15H6M6,7H18V8H6V7Z"></path>
+                  </svg>
+                  <svg className="w-14 h-14 text-purple-300/80 transform translate-y-2" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20,11H4V8H20M20,15H13V13H20M20,19H13V17H20M11,19H4V13H11M20.33,4.67L18.67,3L17,4.67L15.33,3L13.67,4.67L12,3L10.33,4.67L8.67,3L7,4.67L5.33,3L3.67,4.67L2,3V19A2,2 0 0,0 4,21H20A2,2 0 0,0 22,19V3L20.33,4.67Z"></path>
               </svg>
             </div>
             
-            {/* Feature highlight */}
-            <div className="flex items-center space-x-4 mb-8">
-              <div className="h-12 w-12 rounded-full bg-indigo-500/30 flex items-center justify-center">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                {/* Animated line */}
+                <div className="absolute top-10 left-0 w-full">
+                  <svg width="100%" height="30" viewBox="0 0 200 30" fill="none">
+                    <path
+                      d="M0 15C50 -5 150 35 200 15"
+                      stroke="rgba(139, 92, 246, 0.5)"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeDasharray="5 5"
+                      strokeDashoffset="0"
+                      className="animate-dash"
+                    />
                 </svg>
               </div>
-              <div>
-                <h3 className="text-xl font-semibold">Secure Login</h3>
-                <p className="text-white/70">Your data is protected with the latest security standards</p>
               </div>
             </div>
+            
+            {/* Quote */}
+            <blockquote className="relative mt-12">
+              <svg className="w-12 h-12 text-indigo-400/30 absolute -top-6 -left-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M10,7L8,11H11V17H5V11L7,7H10M18,7L16,11H19V17H13V11L15,7H18Z"></path>
+              </svg>
+              <p className="text-xl italic relative z-10 mb-2">
+                "Write freely, without fear. Your authentic voice is your greatest strength."
+              </p>
+              <cite className="text-sm text-white/70">— MindBlogging Philosophy</cite>
+            </blockquote>
           </div>
           
           {/* Footer */}
@@ -158,7 +143,7 @@ const Login = () => {
         </div>
       </div>
       
-      {/* Right side - Form */}
+      {/* Right side - Login form */}
       <div className="w-full lg:w-1/2 bg-white dark:bg-gray-900 flex items-center justify-center p-6">
         <div className="w-full max-w-md space-y-8">
           {/* Mobile Logo - only visible on small screens */}
@@ -172,23 +157,11 @@ const Login = () => {
           </div>
           
           <div>
-            <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white text-center">Welcome back</h2>
+            <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white text-center">Sign in</h2>
             <p className="mt-2 text-sm text-gray-600 dark:text-gray-400 text-center">
-              Sign in to continue to your account
+              Welcome back to your writing journey
             </p>
           </div>
-          
-          {/* Error Alert */}
-          {error && (
-            <div className="p-4 bg-red-50 dark:bg-red-900/20 border-l-4 border-red-400 rounded-r-lg">
-              <div className="flex items-center">
-                <svg className="w-5 h-5 text-red-400 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                </svg>
-                <span className="text-red-700 dark:text-red-300 text-sm font-medium">{error}</span>
-              </div>
-            </div>
-          )}
           
           {/* Tabs */}
           <div className="flex bg-gray-100 dark:bg-gray-800 rounded-xl p-1">
@@ -205,12 +178,24 @@ const Login = () => {
             </div>
           </div>
           
+          {/* Error Alert */}
+          {error && (
+            <div className="p-4 bg-red-50 dark:bg-red-900/20 border-l-4 border-red-400 rounded-r-lg">
+              <div className="flex items-center">
+                <svg className="w-5 h-5 text-red-400 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+                <span className="text-red-700 dark:text-red-300 text-sm font-medium">{error}</span>
+              </div>
+            </div>
+          )}
+          
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="group">
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Email Address
-              </label>
+                </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -223,18 +208,18 @@ const Login = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  placeholder="name@example.com"
+                  placeholder="Enter your email"
                   className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
                   required
                   autoComplete="email"
                 />
               </div>
-            </div>
-            
+              </div>
+              
             <div className="group">
               <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Password
-              </label>
+                  Password
+                </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -250,37 +235,36 @@ const Login = () => {
                   placeholder="Enter your password"
                   className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
                   required
+                  autoComplete="current-password"
                 />
               </div>
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <input
+                    id="remember-me"
+                    name="remember-me"
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={handleRememberMeChange}
                   className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded transition-colors"
-                  checked={rememberMe}
-                  onChange={handleRememberMeChange}
-                />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
-                  Remember me
-                </label>
-              </div>
-              <div className="text-sm">
-                <button 
-                  type="button" 
-                  className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
-                >
+                  />
+                <label htmlFor="remember-me" className="ml-3 block text-sm text-gray-700 dark:text-gray-300">
+                    Remember me
+                  </label>
+                </div>
+                
+                <div className="text-sm">
+                <Link to="/forgot-password" className="font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500">
                   Forgot password?
-                </button>
+                  </Link>
+                </div>
               </div>
-            </div>
-            
-            <button
-              type="submit"
-              disabled={loading}
+              
+                <button
+                  type="submit"
+                  disabled={loading}
               className="group relative w-full flex justify-center py-2.5 px-4 border border-transparent text-sm font-semibold rounded-lg text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] transition-all duration-200"
             >
               {loading && (
@@ -289,38 +273,38 @@ const Login = () => {
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
               )}
-              {loading ? 'Signing in...' : 'Sign in'}
-            </button>
+              {loading ? 'Signing in...' : 'Sign In'}
+                </button>
           </form>
           
-          {/* Divider */}
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-400 font-medium">
-                OR SIGN IN WITH
-              </span>
-            </div>
-          </div>
-          
-          {/* Social Login */}
-          <div>
-            <GoogleSignIn 
-              onSuccess={handleGoogleSuccess}
-              onError={handleGoogleError}
-            />
-          </div>
-          
-          {/* Create account link */}
+          {/* Already have account */}
           <div className="text-center text-sm">
             <p className="text-gray-600 dark:text-gray-400">
               Don't have an account?{' '}
               <Link to="/register" className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400">
-                Sign up here
+                Create one here
               </Link>
             </p>
+          </div>
+          
+          {/* Google Sign-In */}
+          <div className="mt-8">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300 dark:border-gray-700"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-400">Or continue with</span>
+              </div>
+            </div>
+            
+            <div className="mt-6">
+              <GoogleSignIn
+                onSuccess={handleGoogleSuccess}
+                onError={handleGoogleError}
+                buttonText="Sign in with Google"
+              />
+            </div>
           </div>
         </div>
       </div>

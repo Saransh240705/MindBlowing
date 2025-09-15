@@ -27,11 +27,12 @@ const buildApiUrl = (endpoint) => {
   return `${API_BASE_URL}${endpoint}`;
 };
 
-// Debug logging
-console.log('🚀 API Configuration:', {
-  BASE_URL: API.BASE_URL,
-  ENV_VAR: process.env.REACT_APP_API_URL,
-  NODE_ENV: process.env.NODE_ENV
-});
+// Debug logging (only in development)
+if (process.env.NODE_ENV === 'development') {
+  console.log('API Configuration:', {
+    BASE_URL: API.BASE_URL,
+    NODE_ENV: process.env.NODE_ENV
+  });
+}
 
 export { API, API_ENDPOINTS, buildApiUrl };

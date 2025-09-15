@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthProvider } from './context/AuthContext.jsx';
 import { ThemeProvider } from './context/ThemeContext.jsx';
 import Navbar from './components/Navbar.jsx';
@@ -28,10 +29,14 @@ const AuthRoute = ({ children }) => {
 };
 
 function App() {
+  // Get Google Client ID from environment variables
+  const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID || 'your-google-client-id-here';
+  
   return (
-    <ThemeProvider>
-      <AuthProvider>
-        <Router>
+    <GoogleOAuthProvider clientId={googleClientId}>
+      <ThemeProvider>
+        <AuthProvider>
+          <Router>
           <Routes>
             <Route 
               path="/login" 
@@ -89,8 +94,9 @@ function App() {
             />
           </Routes>
         </Router>
-      </AuthProvider>
-    </ThemeProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </GoogleOAuthProvider>
   );
 }
 
